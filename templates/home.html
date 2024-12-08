@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h2>Welcome, {{ current_user.username }}!</h2>
+<a href="{{ url_for('search') }}" class="btn btn-primary">Search Recipes</a>
+<a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Dashboard</a>
+<a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+{% endblock %}

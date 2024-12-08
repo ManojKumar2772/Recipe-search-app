@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h2>Dashboard</h2>
+<div id="alert-box"></div>
+<h3>Change Password</h3>
+<form method="POST" action="{{ url_for('change_password') }}">
+    <div class="form-group">
+        <label for="new_password">New Password:</label>
+        <input type="password" class="form-control" id="new_password" name="new_password" required disabled>
+    </div>
+    <button type="button" class="btn btn-secondary" id="edit-password-btn">Edit</button>
+    <button type="submit" class="btn btn-primary" id="save-password-btn" disabled>Change Password</button>
+</form>
+
+<h3>Delete Account</h3>
+<form method="POST" action="{{ url_for('delete_account') }}">
+    <button type="submit" class="btn btn-danger">Delete Account</button>
+</form>
+
+<h3>Search History</h3>
+<table class="history-table">
+    <thead>
+        <tr>
+            <th>Recipe Name</th>
+            <th>Timestamp</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in history %}
+        <tr>
+            <td>{{ item.recipe_name }}</td>
+            <td>{{ item.timestamp }}</td>
+            <td>
+                <a href="{{ url_for('get_recipe_details', recipe_id=item.id) }}" class="btn btn-primary">View Recipe</a>
+                <button class="btn btn-danger delete-history-btn" data-id="{{ item.id }}">Delete</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+document.getElementById('edit-password-btn').addEventListener('click', function() {
+    document.getElementById('new_password').disabled = false;
+    document.getElementById('save-password-btn').disabled = false;
+});
+
+document.querySelectorAll('.delete-history-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        const itemId = this.getAttribute('data-id');
+        fetch(`/delete_search_history/${itemId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Failed to delete search history.');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

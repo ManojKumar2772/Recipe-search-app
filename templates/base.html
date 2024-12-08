@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const alertBox = document.getElementById('alert-box');
+            const flashes = {{ get_flashed_messages(with_categories=true) | tojson }};
+            flashes.forEach(flash => {
+                const div = document.createElement('div');
+                div.className = `alert alert-${flash[0]}`;
+                div.textContent = flash[1];
+                alertBox.appendChild(div);
+            });
+        });
+    </script>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{{ url_for('home') }}" class="nav-button">Home</a>
+        <a href="{{ url_for('search') }}" class="nav-button">Search Recipes</a>
+        <a href="{{ url_for('dashboard') }}" class="nav-button">Dashboard</a>
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('logout') }}" class="nav-button">Logout</a>
+        {% else %}
+            <a href="{{ url_for('login') }}" class="nav-button">Login</a>
+        {% endif %}
+    </nav>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

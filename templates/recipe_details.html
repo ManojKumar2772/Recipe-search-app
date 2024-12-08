@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Recipe Details{% endblock %}
+
+{% block content %}
+<h2>{{ data['title'] }}</h2>
+<p>{{ data['summary']|safe }}</p>
+<h3>Ingredients</h3>
+<ul class="ingredient-list">
+    {% for ingredient in data['extendedIngredients'] %}
+    <li>{{ ingredient['original'] }}</li>
+    {% endfor %}
+</ul>
+<h3>Instructions</h3>
+<p>{{ data['instructions']|safe }}</p>
+{% endblock %}
